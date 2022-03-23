@@ -1,13 +1,14 @@
-import { Button, TextInput } from "react-native-paper";
+import { Button, Colors, TextInput } from "react-native-paper";
 import { useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import * as SecureStore from "expo-secure-store";
-import { User } from "./models/User";
-import { config } from "./config";
-import { Credentials } from "./models/Credentials";
-import { getUser, login } from "./calls";
-import { AuthContext } from "./context";
+import { User } from "../models/User";
+import { colors, config } from "../utils/config";
+import { Credentials } from "../models/Credentials";
+import { getUser, login } from "../utils/calls";
+import { AuthContext } from "../utils/context";
 import React from "react";
+import { AuthButton } from "./AuthButton";
 
 export const Login = ({ getUserUri, loginUri, signIn, signOut, setError }) => {
   const [state, setState] = useState<Credentials>({
@@ -18,17 +19,19 @@ export const Login = ({ getUserUri, loginUri, signIn, signOut, setError }) => {
     <>
       <TextInput
         style={styles.input}
+        label={<Text style={styles.input_label}>Username</Text>}
         onChangeText={(input) =>
           setState({ username: input, password: state.password })
         }
       />
       <TextInput
         style={styles.input}
+        label={<Text style={styles.input_label}>Password</Text>}
         onChangeText={(input) =>
           setState({ username: state.username, password: input })
         }
       />
-      <Button
+      <AuthButton
         onPress={async () => {
           signOut();
           await login(state, loginUri)
@@ -38,16 +41,19 @@ export const Login = ({ getUserUri, loginUri, signIn, signOut, setError }) => {
             .then(([user, token]) => signIn(user, token))
             .catch((e) => setError(e));
         }}
-      >
-        Log in
-      </Button>
+        text="Log in"
+      />
     </>
   );
 };
 
 const styles = StyleSheet.create({
   input: {
-    height: 50,
+    backgroundColor: Colors.white,
     width: 200,
+    alignSelf: "center",
+  },
+  input_label: {
+    color: colors.darkerMain,
   },
 });

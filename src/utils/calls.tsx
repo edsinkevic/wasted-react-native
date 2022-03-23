@@ -1,5 +1,6 @@
-import { Credentials } from "./models/Credentials";
+import { Credentials } from "../models/Credentials";
 import * as SecureStore from "expo-secure-store";
+import { config } from "./config";
 
 export const login = (creds: Credentials, uri: string) => {
   return fetch(uri, {
@@ -51,11 +52,35 @@ export const signup = (creds, uri: string) => {
       case 200:
         return response.json();
       case 400:
-        return response.json().then((json) => {
-          return Promise.reject(JSON.stringify(json));
-        });
+        return response
+          .json()
+          .then((json) => Promise.reject(JSON.stringify(json)));
+      case 409:
+        return response
+          .json()
+          .then((json) => Promise.reject(JSON.stringify(json.errors)));
       default:
         return null;
+    }
+  });
+};
+
+export const registerOffer = (offer) => {
+  return fetch(`${config.baseUrl}/offer`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(offer),
+  }).then((response) => {
+    console.log(offer);
+    console.log(response.status);
+    switch (response.status) {
+      case 200:
+        return response.json();
+      default:
+        return Promise.reject("Could not register offer");
     }
   });
 };

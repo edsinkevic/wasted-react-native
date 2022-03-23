@@ -1,27 +1,32 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
-import { Login } from "./Login";
-import { User } from "./models/User";
+import { Login } from "./src/components/Login";
+import { User } from "./src/models/User";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { ShopScreen } from "./screens/ShopScreen";
-import { Member } from "./models/Member";
-import { MemberLoginScreen } from "./screens/MemberLoginScreen";
-import { getUser, login } from "./calls";
-import { config } from "./config";
+import { ShopScreen } from "./src/screens/ShopScreen";
+import { Member } from "./src/models/Member";
+import { MemberLoginScreen } from "./src/screens/MemberLoginScreen";
+import { getUser, login } from "./src/utils/calls";
+import { config } from "./src/utils/config";
 import { Button } from "react-native-paper";
-import { AuthContext } from "./context";
-import { UserLoginScreen } from "./screens/UserLoginScreen";
-import { UserSignupScreen } from "./screens/UserSignupScreen";
+import { AuthContext } from "./src/utils/context";
+import { UserLoginScreen } from "./src/screens/UserLoginScreen";
+import { UserSignupScreen } from "./src/screens/UserSignupScreen";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { SplashScreen } from "./screens/SplashScreen";
-import { MemberSignupScreen } from "./screens/MemberSignupScreen";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { SplashScreen } from "./src/screens/SplashScreen";
+import { MemberSignupScreen } from "./src/screens/MemberSignupScreen";
+import { CustomerDrawer } from "./src/components/CustomerDrawer";
+import { MemberDrawer } from "./src/components/MemberDrawer";
+import { RegisterOfferScreen } from "./src/screens/RegisterOfferScreen";
 
 const AuthStack = createNativeStackNavigator();
 const Tab = createMaterialTopTabNavigator();
+const Drawer = createDrawerNavigator();
 
 const Splash = () => {
   return (
@@ -32,27 +37,42 @@ const Splash = () => {
 };
 
 const MemberTabScreen = () => (
-  <Tab.Navigator>
-    <Tab.Screen name="Shop" component={ShopScreen} />
-  </Tab.Navigator>
+  <Drawer.Navigator
+    drawerContent={(props) => <MemberDrawer {...props} />}
+    screenOptions={{
+      swipeEdgeWidth: 300,
+      headerShown: false,
+      swipeEnabled: true,
+    }}
+  >
+    <Drawer.Screen name="Shop" component={ShopScreen} />
+    <Drawer.Screen name="Register items" component={RegisterOfferScreen} />
+  </Drawer.Navigator>
 );
 
-const UserTabScreen = () => (
-  <Tab.Navigator>
-    <Tab.Screen name="Shop" component={ShopScreen} />
-  </Tab.Navigator>
+const UserDrawerScreen = () => (
+  <Drawer.Navigator
+    drawerContent={(props) => <CustomerDrawer {...props} />}
+    screenOptions={{
+      swipeEdgeWidth: 300,
+      headerShown: false,
+      swipeEnabled: true,
+    }}
+  >
+    <Drawer.Screen name="Shop" component={ShopScreen} />
+  </Drawer.Navigator>
 );
 
 const AuthStackScreen = () => (
   <AuthStack.Navigator
-    screenOptions={{ headerShown: false, animation: "slide_from_bottom" }}
+    screenOptions={{ headerShown: false, animation: "fade" }}
   >
     <AuthStack.Screen name="SplashScreen" component={SplashScreen} />
     <AuthStack.Screen name="User login" component={UserLoginScreen} />
     <AuthStack.Screen name="User signup" component={UserSignupScreen} />
     <AuthStack.Screen name="Member signup" component={MemberSignupScreen} />
     <AuthStack.Screen name="Member login" component={MemberLoginScreen} />
-    <AuthStack.Screen name="User pages" component={UserTabScreen} />
+    <AuthStack.Screen name="User pages" component={UserDrawerScreen} />
     <AuthStack.Screen name="Member pages" component={MemberTabScreen} />
   </AuthStack.Navigator>
 );
@@ -88,7 +108,7 @@ export default function App() {
       user: user,
       member: member,
     };
-  }, []);
+  }, [user, member, error]);
 
   useEffect(() => {
     setTimeout(() => setIsLoading(false), 1000);
@@ -105,7 +125,10 @@ export default function App() {
   }, [member]);
 
   useEffect(() => {
-    if (error != null) Alert.alert(null, JSON.stringify(error));
+    if (error != null) {
+      Alert.alert(null, JSON.stringify(error));
+      setError(null);
+    }
   }, [error]);
 
   if (isLoading) {
@@ -113,7 +136,7 @@ export default function App() {
   }
 
   const components = {
-    userMode: <UserTabScreen />,
+    userMode: <UserDrawerScreen />,
     memberMode: <MemberTabScreen />,
     authMode: <AuthStackScreen />,
   };

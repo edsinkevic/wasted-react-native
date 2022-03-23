@@ -1,3 +1,5 @@
+import { Vendor } from "./Vendor";
+
 export interface Member {
   username: string;
   firstname: string;
@@ -5,5 +7,5 @@ export interface Member {
   role: string;
   email: string;
   id: string;
-  vendorId: string;
+  vendor: Vendor;
 }
