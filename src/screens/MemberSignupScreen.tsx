@@ -68,7 +68,7 @@ export const MemberSignupScreen = ({ navigation }) => {
         headerComponent={
           <Text style={styles.title}>
             Sorry there are no vendors in the system. Please message
-            Proffesional Amateurs.
+            Professional Amateurs.
           </Text>
         }
         footerComponent={<></>}
