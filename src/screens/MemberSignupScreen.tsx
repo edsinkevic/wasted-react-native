@@ -53,14 +53,29 @@ export const MemberSignupScreen = ({ navigation }) => {
   const { setError, error } = useContext(AuthContext);
 
   useEffect(() => {
-    getVendors().then((vendors) => {
-      setVendors(vendors);
-      pickVendor(vendors[0]);
-      setCreds(clone(creds, { vendorId: vendors[0].id }));
+    getVendors().then((newVendors) => {
+      setVendors(newVendors);
+      if (vendors.length > 0) {
+        pickVendor(vendors[0]);
+        setCreds(clone(creds, { vendorId: vendors[0].id }));
+      }
     });
   }, []);
 
-  if (vendor == null) return null;
+  if (vendor == null)
+    return (
+      <FooterHeader
+        headerComponent={
+          <Text style={styles.title}>
+            Sorry there are no vendors in the system. Please message
+            Proffesional Amateurs.
+          </Text>
+        }
+        footerComponent={<></>}
+        headerFlex={1}
+        footerFlex={0}
+      />
+    );
 
   const header = () => <Text style={styles.title}>Welcome</Text>;
 
