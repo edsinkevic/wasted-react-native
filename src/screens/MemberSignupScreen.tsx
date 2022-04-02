@@ -16,7 +16,8 @@ import { AuthContext } from "../utils/context";
 import { stringify } from "json-js";
 import { SignupBase } from "../components/SignupBase";
 import { FooterHeader } from "../templates/FooterHeader";
-import { AuthButton } from "../components/AuthButton";
+import { WastedButton } from "../components/WastedButton";
+import { SplashScreen } from "./SplashScreen";
 
 interface Signup {
   username: string;
@@ -49,20 +50,27 @@ export const MemberSignupScreen = ({ navigation }) => {
   });
   const [vendors, setVendors] = useState<Array<Vendor>>([]);
   const [vendor, pickVendor] = useState<Vendor>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const { setError, error } = useContext(AuthContext);
 
   useEffect(() => {
+    setLoading(true);
     getVendors().then((newVendors) => {
       setVendors(newVendors);
-      if (vendors.length > 0) {
-        pickVendor(vendors[0]);
-        setCreds(clone(creds, { vendorId: vendors[0].id }));
+      if (newVendors.length > 0) {
+        pickVendor(newVendors[0]);
+        setCreds(clone(creds, { vendorId: newVendors[0].id }));
       }
+      setLoading(false);
     });
   }, []);
 
-  if (vendor == null)
+  console.log(vendor);
+
+  if (loading) return <SplashScreen />;
+
+  if (vendor === null)
     return (
       <FooterHeader
         headerComponent={
@@ -94,7 +102,7 @@ export const MemberSignupScreen = ({ navigation }) => {
           <Picker.Item key={vendor.id} label={vendor.name} value={vendor} />
         ))}
       </Picker>
-      <AuthButton
+      <WastedButton
         text="Sign up"
         onPress={async () => {
           await signup(

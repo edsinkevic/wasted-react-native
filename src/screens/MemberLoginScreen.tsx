@@ -9,7 +9,7 @@ import * as SecureStore from "expo-secure-store";
 import { AuthContext } from "../utils/context";
 import { Button } from "react-native-paper";
 import { FooterHeader } from "../templates/FooterHeader";
-import { AuthButton } from "../components/AuthButton";
+import { WastedButton } from "../components/WastedButton";
 
 export const MemberLoginScreen = ({ navigation }) => {
   const { signInAsMember, signOut, setError } = React.useContext(AuthContext);
@@ -24,7 +24,7 @@ export const MemberLoginScreen = ({ navigation }) => {
         signOut={signOut}
         setError={setError}
       />
-      <AuthButton
+      <WastedButton
         onPress={() => navigation.push("Member signup")}
         text="Sign up"
       />

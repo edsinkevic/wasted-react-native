@@ -18,23 +18,18 @@ import { UserSignupScreen } from "./src/screens/UserSignupScreen";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { SplashScreen } from "./src/screens/SplashScreen";
+import { WelcomeScreen } from "./src/screens/WelcomeScreen";
 import { MemberSignupScreen } from "./src/screens/MemberSignupScreen";
 import { CustomerDrawer } from "./src/components/CustomerDrawer";
 import { MemberDrawer } from "./src/components/MemberDrawer";
 import { RegisterOfferScreen } from "./src/screens/RegisterOfferScreen";
+import { RegisterEntryScreen } from "./src/screens/RegisterEntryScreen";
+import { SplashScreen } from "./src/screens/SplashScreen";
+import MemberOverviewScreen from "./src/screens/MemberOverviewScreen";
 
 const AuthStack = createNativeStackNavigator();
 const Tab = createMaterialTopTabNavigator();
 const Drawer = createDrawerNavigator();
-
-const Splash = () => {
-  return (
-    <View>
-      <Text>Loading</Text>
-    </View>
-  );
-};
 
 const MemberTabScreen = () => (
   <Drawer.Navigator
@@ -47,6 +42,8 @@ const MemberTabScreen = () => (
   >
     <Drawer.Screen name="Shop" component={ShopScreen} />
     <Drawer.Screen name="Register items" component={RegisterOfferScreen} />
+    <Drawer.Screen name="Register entries" component={RegisterEntryScreen} />
+    <Drawer.Screen name="Overview" component={MemberOverviewScreen} />
   </Drawer.Navigator>
 );
 
@@ -67,7 +64,7 @@ const AuthStackScreen = () => (
   <AuthStack.Navigator
     screenOptions={{ headerShown: false, animation: "fade" }}
   >
-    <AuthStack.Screen name="SplashScreen" component={SplashScreen} />
+    <AuthStack.Screen name="SplashScreen" component={WelcomeScreen} />
     <AuthStack.Screen name="User login" component={UserLoginScreen} />
     <AuthStack.Screen name="User signup" component={UserSignupScreen} />
     <AuthStack.Screen name="Member signup" component={MemberSignupScreen} />
@@ -132,7 +129,7 @@ export default function App() {
   }, [error]);
 
   if (isLoading) {
-    return <Splash />;
+    return <SplashScreen />;
   }
 
   const components = {

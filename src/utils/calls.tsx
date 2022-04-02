@@ -84,3 +84,57 @@ export const registerOffer = (offer) => {
     }
   });
 };
+
+export const updateOffer = (offer) => {
+  return fetch(`${config.baseUrl}/offer`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(offer),
+  }).then((response) => {
+    console.log(offer);
+    console.log(response.status);
+    switch (response.status) {
+      case 200:
+        return response.json();
+      case 409:
+        return Promise.reject(response.json());
+      default:
+        return Promise.reject("Could not register offer");
+    }
+  });
+};
+
+export const registerEntry = (entry) => {
+  return fetch(`${config.baseUrl}/offerentry`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(entry),
+  }).then((response) => {
+    console.log(entry);
+    console.log(response.status);
+    switch (response.status) {
+      case 200:
+        return response.json();
+      default:
+        return Promise.reject("Could not add entry");
+    }
+  });
+};
+
+export const getOffersByVendorName = (name: string) => {
+  return fetch(`${config.baseUrl}/offer/${name}`).then((response) => {
+    console.log(response.status);
+    switch (response.status) {
+      case 200:
+        return response.json();
+      default:
+        return Promise.reject("Could not get offers");
+    }
+  });
+};

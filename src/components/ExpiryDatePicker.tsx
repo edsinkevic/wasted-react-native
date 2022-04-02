@@ -1,25 +1,12 @@
 import React, { useState } from "react";
-import { Button } from "react-native";
-import DatePicker from "react-native-date-picker";
+import DatePicker from "react-native-modern-datepicker";
+import { Button } from "react-native-paper";
 
-export default ({ date, setDate }) => {
-  const [open, setOpen] = useState(false);
-
+export default ({ selectedDate, setSelectedDate, setOpen }) => {
   return (
     <>
-      <Button title="Open" onPress={() => setOpen(true)} />
-      <DatePicker
-        modal
-        open={open}
-        date={date}
-        onConfirm={(date) => {
-          setOpen(false);
-          setDate(date);
-        }}
-        onCancel={() => {
-          setOpen(false);
-        }}
-      />
+      <DatePicker onSelectedChange={(date) => setSelectedDate(date)} />
+      <Button onPress={() => setOpen(false)}>Close </Button>
     </>
   );
 };

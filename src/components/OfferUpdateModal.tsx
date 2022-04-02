@@ -6,26 +6,33 @@ import { colors, config } from "../utils/config";
 import { AuthContext } from "../utils/context";
 import CurrencyInput, { FakeCurrencyInput } from "react-native-currency-input";
 import { FooterHeader } from "../templates/FooterHeader";
-import ExpiryDatePicker from "../components/ExpiryDatePicker";
-import { registerOffer } from "../utils/calls";
+import ExpiryDatePicker from "./ExpiryDatePicker";
+import { registerOffer, updateOffer } from "../utils/calls";
+import { Offer } from "../models/Offer";
 
 interface Info {
+  offerId: string;
   name: string;
-  addedBy: string;
   weight: number;
   category: string;
   price: number;
 }
 
-export const RegisterOfferScreen = ({ navigation }) => {
+export const OfferInputModal = ({
+  offer,
+  onSuccess,
+}: {
+  offer: Offer;
+  onSuccess: (offer: Offer) => void;
+}) => {
   const { member, setError } = useContext(AuthContext);
 
   const [info, setInfo] = useState<Info>({
-    name: "",
-    addedBy: member.vendor.id,
-    weight: 0,
-    category: "",
-    price: 0,
+    offerId: offer.id,
+    name: offer.name,
+    weight: offer.weight,
+    category: offer.category,
+    price: offer.price,
   });
 
   const initialInput = {
@@ -46,22 +53,24 @@ export const RegisterOfferScreen = ({ navigation }) => {
     label: <Text style={styles.input_label}>{labelString}</Text>,
   });
 
-  const header = <Text style={styles.title}>Register an offer</Text>;
-  const footer = (
+  return (
     <View style={styles.container}>
       <TextInput
         {...inputProps("Item name")}
         maxLength={30}
+        defaultValue={info.name}
         onChangeText={(input) => setInfo(clone(info, { name: input }))}
       />
       <TextInput
         {...inputProps("Category")}
         maxLength={12}
+        defaultValue={info.category}
         onChangeText={(input) => setInfo(clone(info, { category: input }))}
       />
       <TextInput
         {...inputProps("Weight")}
         value={textInput.weight}
+        defaultValue={info.weight.toString()}
         error={textInput.weight === "0"}
         maxLength={3}
         keyboardType="numeric"
@@ -79,23 +88,14 @@ export const RegisterOfferScreen = ({ navigation }) => {
       />
       <Button
         onPress={() =>
-          registerOffer(info)
-            .then((result) => navigation.jumpTo("Register entries"))
+          updateOffer(info)
+            .then((result: Offer) => onSuccess(result))
             .catch((e) => setError(e))
         }
       >
-        Register
+        Update
       </Button>
     </View>
-  );
-
-  return (
-    <FooterHeader
-      headerComponent={header}
-      footerComponent={footer}
-      headerFlex={1}
-      footerFlex={3}
-    />
   );
 };
 

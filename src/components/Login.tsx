@@ -8,7 +8,7 @@ import { Credentials } from "../models/Credentials";
 import { getUser, login } from "../utils/calls";
 import { AuthContext } from "../utils/context";
 import React from "react";
-import { AuthButton } from "./AuthButton";
+import { WastedButton } from "./WastedButton";
 
 export const Login = ({ getUserUri, loginUri, signIn, signOut, setError }) => {
   const [state, setState] = useState<Credentials>({
@@ -31,7 +31,7 @@ export const Login = ({ getUserUri, loginUri, signIn, signOut, setError }) => {
           setState({ username: state.username, password: input })
         }
       />
-      <AuthButton
+      <WastedButton
         onPress={async () => {
           signOut();
           await login(state, loginUri)

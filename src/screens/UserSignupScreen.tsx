@@ -7,7 +7,7 @@ import { colors, config } from "../utils/config";
 import { AuthContext } from "../utils/context";
 import { SignupBase } from "../components/SignupBase";
 import { FooterHeader } from "../templates/FooterHeader";
-import { AuthButton } from "../components/AuthButton";
+import { WastedButton } from "../components/WastedButton";
 import { signup } from "../utils/calls";
 
 interface Signup {
@@ -34,7 +34,7 @@ export const UserSignupScreen = ({ navigation }) => {
   const footer = (
     <>
       <SignupBase creds={creds} setCreds={setCreds} />
-      <AuthButton
+      <WastedButton
         text="Sign up"
         onPress={async () => {
           await signup(creds, `${config.baseUrl}/authentication/user/register`)

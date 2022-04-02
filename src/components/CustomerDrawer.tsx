@@ -6,7 +6,7 @@ import {
 } from "@react-navigation/drawer";
 import { Button } from "react-native-paper";
 import { AuthContext } from "../utils/context";
-import { AuthButton } from "./AuthButton";
+import { WastedButton } from "./WastedButton";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "../utils/config";
 
@@ -19,7 +19,7 @@ export const CustomerDrawer = (props) => {
       <DrawerContentScrollView {...props}>
         <DrawerItemList {...props} />
       </DrawerContentScrollView>
-      <AuthButton text="Log out" onPress={signOut} />
+      <WastedButton text="Log out" onPress={signOut} />
     </SafeAreaView>
   );
 };

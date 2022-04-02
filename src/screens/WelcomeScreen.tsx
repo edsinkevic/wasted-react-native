@@ -5,9 +5,20 @@ import { WastedButton } from "../components/WastedButton";
 import { colors } from "../utils/config";
 import { FooterHeader } from "../templates/FooterHeader";
 
-export const SplashScreen = () => {
-  const header = <Text style={styles.title}>Loading</Text>;
-  const footer = <></>;
+export const WelcomeScreen = ({ navigation }) => {
+  const header = <Text style={styles.title}>Welcome</Text>;
+  const footer = (
+    <>
+      <WastedButton
+        text="Enter as customer"
+        onPress={() => navigation.push("User login")}
+      />
+      <WastedButton
+        text="Enter as member"
+        onPress={() => navigation.push("Member login")}
+      />
+    </>
+  );
 
   return (
     <FooterHeader
