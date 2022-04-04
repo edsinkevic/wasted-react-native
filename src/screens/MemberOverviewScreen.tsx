@@ -1,18 +1,22 @@
-import { FooterHeader } from "../templates/FooterHeader";
-import { Text, StyleSheet, View, FlatList } from "react-native";
-import { colors } from "../utils/config";
-import React, { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../utils/context";
-import { Member } from "../models/Member";
-import { Offer } from "../models/Offer";
-import { getOffersByVendorName } from "../utils/calls";
-import { SplashScreen } from "./SplashScreen";
-import OfferListing from "../components/OfferListing";
-import OfferOverviewScreen from "./OfferOverviewScreen";
-import { setStatusBarNetworkActivityIndicatorVisible } from "expo-status-bar";
+import { FooterHeader } from '../templates/FooterHeader';
+import { Text, StyleSheet, View, FlatList } from 'react-native';
+import { colors } from '../utils/config';
+import React, { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../utils/context';
+import { Member } from '../models/Member';
+import { Offer } from '../models/Offer';
+import { getOffersByVendorName } from '../utils/calls';
+import { SplashScreen } from './SplashScreen';
+import OfferListing from '../components/OfferListing';
+import OfferOverviewScreen from './OfferOverviewScreen';
+import { ErrorResponse } from '../models/ErrorResponse';
+import { AxiosError } from 'axios';
 
 export default ({ navigation }) => {
-  const { member, setError }: { member: Member; setError: () => void } =
+  const {
+    member,
+    setError,
+  }: { member: Member; setError: (e: ErrorResponse) => void } =
     useContext(AuthContext);
 
   const [offers, setOffers] = useState<Array<Offer>>([]);
@@ -31,12 +35,16 @@ export default ({ navigation }) => {
     />
   );
 
-  useEffect(() => {
-    setLoading(true);
+  const refreshOffers = (setFlag: (x: boolean) => void) => {
+    setFlag(true);
     getOffersByVendorName(member.vendor.name)
       .then(setOffers)
-      .catch(setError)
-      .finally(() => setLoading(false));
+      .catch((e: AxiosError<ErrorResponse>) => setError(e.response.data))
+      .finally(() => setFlag(false));
+  };
+
+  useEffect(() => {
+    refreshOffers(setLoading);
   }, []);
 
   if (loading) return <SplashScreen />;
@@ -48,13 +56,7 @@ export default ({ navigation }) => {
       <Text style={styles.list_header}>Your offers</Text>
       <FlatList
         refreshing={refresh}
-        onRefresh={() => {
-          setRefresh(true);
-          getOffersByVendorName(member.vendor.name)
-            .then(setOffers)
-            .catch(setError)
-            .finally(() => setRefresh(false));
-        }}
+        onRefresh={() => refreshOffers(setRefresh)}
         data={offers}
         keyExtractor={(item) => item.id}
         renderItem={renderOffer}
@@ -90,14 +92,14 @@ const styles = StyleSheet.create({
   },
   text_header: {
     color: colors.secondary,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 30,
   },
   list_header: {
     color: colors.main,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 20,
-    alignSelf: "center",
+    alignSelf: 'center',
     paddingBottom: 30,
   },
 });

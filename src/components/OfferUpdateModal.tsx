@@ -1,22 +1,17 @@
-import { clone } from "cloneable-ts";
-import React, { useContext, useReducer, useState } from "react";
-import { View, StyleSheet, Text } from "react-native";
-import { Button, TextInput } from "react-native-paper";
-import { colors, config } from "../utils/config";
-import { AuthContext } from "../utils/context";
-import CurrencyInput, { FakeCurrencyInput } from "react-native-currency-input";
-import { FooterHeader } from "../templates/FooterHeader";
-import ExpiryDatePicker from "./ExpiryDatePicker";
-import { registerOffer, updateOffer } from "../utils/calls";
-import { Offer } from "../models/Offer";
-
-interface Info {
-  offerId: string;
-  name: string;
-  weight: number;
-  category: string;
-  price: number;
-}
+import { clone } from 'cloneable-ts';
+import React, { useContext, useReducer, useState } from 'react';
+import { View, StyleSheet, Text } from 'react-native';
+import { Button, TextInput } from 'react-native-paper';
+import { colors, config } from '../utils/config';
+import { AuthContext } from '../utils/context';
+import CurrencyInput, { FakeCurrencyInput } from 'react-native-currency-input';
+import { FooterHeader } from '../templates/FooterHeader';
+import ExpiryDatePicker from './ExpiryDatePicker';
+import { registerOffer, updateOffer } from '../utils/calls';
+import { Offer } from '../models/Offer';
+import { OfferUpdate } from '../models/OfferUpdate';
+import { Axios, AxiosError } from 'axios';
+import { ErrorResponse } from '../models/ErrorResponse';
 
 export const OfferInputModal = ({
   offer,
@@ -27,7 +22,7 @@ export const OfferInputModal = ({
 }) => {
   const { member, setError } = useContext(AuthContext);
 
-  const [info, setInfo] = useState<Info>({
+  const [info, setInfo] = useState<OfferUpdate>({
     offerId: offer.id,
     name: offer.name,
     weight: offer.weight,
@@ -36,7 +31,7 @@ export const OfferInputModal = ({
   });
 
   const initialInput = {
-    price: "",
+    price: '',
   };
 
   const reducer = (state, updates) => ({
@@ -56,22 +51,22 @@ export const OfferInputModal = ({
   return (
     <View style={styles.container}>
       <TextInput
-        {...inputProps("Item name")}
+        {...inputProps('Item name')}
         maxLength={30}
         defaultValue={info.name}
         onChangeText={(input) => setInfo(clone(info, { name: input }))}
       />
       <TextInput
-        {...inputProps("Category")}
+        {...inputProps('Category')}
         maxLength={12}
         defaultValue={info.category}
         onChangeText={(input) => setInfo(clone(info, { category: input }))}
       />
       <TextInput
-        {...inputProps("Weight")}
+        {...inputProps('Weight')}
         value={textInput.weight}
         defaultValue={info.weight.toString()}
-        error={textInput.weight === "0"}
+        error={textInput.weight === '0'}
         maxLength={3}
         keyboardType="numeric"
         onChangeText={(input: string) => {
@@ -90,7 +85,7 @@ export const OfferInputModal = ({
         onPress={() =>
           updateOffer(info)
             .then((result: Offer) => onSuccess(result))
-            .catch((e) => setError(e))
+            .catch((e: AxiosError<ErrorResponse>) => setError(e.response.data))
         }
       >
         Update
@@ -109,12 +104,12 @@ const styles = StyleSheet.create({
   title: {
     color: colors.secondary,
     fontSize: 30,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   textInput: {
     backgroundColor: colors.secondary,
     width: 350,
-    alignSelf: "center",
+    alignSelf: 'center',
   },
   input_label: {
     color: colors.darkerMain,
