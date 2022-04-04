@@ -1,31 +1,32 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
-import { Login } from "./src/components/Login";
-import { User } from "./src/models/User";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { ShopScreen } from "./src/screens/ShopScreen";
-import { Member } from "./src/models/Member";
-import { MemberLoginScreen } from "./src/screens/MemberLoginScreen";
-import { getUser, login } from "./src/utils/calls";
-import { config } from "./src/utils/config";
-import { Button } from "react-native-paper";
-import { AuthContext } from "./src/utils/context";
-import { UserLoginScreen } from "./src/screens/UserLoginScreen";
-import { UserSignupScreen } from "./src/screens/UserSignupScreen";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import { WelcomeScreen } from "./src/screens/WelcomeScreen";
-import { MemberSignupScreen } from "./src/screens/MemberSignupScreen";
-import { CustomerDrawer } from "./src/components/CustomerDrawer";
-import { MemberDrawer } from "./src/components/MemberDrawer";
-import { RegisterOfferScreen } from "./src/screens/RegisterOfferScreen";
-import { RegisterEntryScreen } from "./src/screens/RegisterEntryScreen";
-import { SplashScreen } from "./src/screens/SplashScreen";
-import MemberOverviewScreen from "./src/screens/MemberOverviewScreen";
+import { StatusBar } from 'expo-status-bar';
+import React, { useEffect, useState } from 'react';
+import { Alert, StyleSheet, Text, View } from 'react-native';
+import { Login } from './src/components/Login';
+import { User } from './src/models/User';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { ShopScreen } from './src/screens/ShopScreen';
+import { Member } from './src/models/Member';
+import { MemberLoginScreen } from './src/screens/MemberLoginScreen';
+import { getUser, login } from './src/utils/calls';
+import { config } from './src/utils/config';
+import { Button } from 'react-native-paper';
+import { AuthContext } from './src/utils/context';
+import { UserLoginScreen } from './src/screens/UserLoginScreen';
+import { UserSignupScreen } from './src/screens/UserSignupScreen';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { WelcomeScreen } from './src/screens/WelcomeScreen';
+import { MemberSignupScreen } from './src/screens/MemberSignupScreen';
+import { CustomerDrawer } from './src/components/CustomerDrawer';
+import { MemberDrawer } from './src/components/MemberDrawer';
+import { RegisterOfferScreen } from './src/screens/RegisterOfferScreen';
+import { RegisterEntryScreen } from './src/screens/RegisterEntryScreen';
+import { SplashScreen } from './src/screens/SplashScreen';
+import MemberOverviewScreen from './src/screens/MemberOverviewScreen';
+import { ErrorResponse } from './src/models/ErrorResponse';
 
 const AuthStack = createNativeStackNavigator();
 const Tab = createMaterialTopTabNavigator();
@@ -62,7 +63,7 @@ const UserDrawerScreen = () => (
 
 const AuthStackScreen = () => (
   <AuthStack.Navigator
-    screenOptions={{ headerShown: false, animation: "fade" }}
+    screenOptions={{ headerShown: false, animation: 'fade' }}
   >
     <AuthStack.Screen name="SplashScreen" component={WelcomeScreen} />
     <AuthStack.Screen name="User login" component={UserLoginScreen} />
@@ -79,26 +80,26 @@ export default function App() {
   const [token, setToken] = useState<string>(null);
   const [member, setMember] = useState<Member>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [mode, setMode] = useState<string>("authMode");
-  const [error, setError] = useState<string>(null);
+  const [mode, setMode] = useState<string>('authMode');
+  const [error, setError] = useState<ErrorResponse>(null);
 
   const authContext = React.useMemo(() => {
     return {
       signInAsUser: (user: User, token: string) => {
         setUser(user);
         setToken(token);
-        setMode("userMode");
+        setMode('userMode');
       },
       signInAsMember: (member: Member, token: string) => {
         setMember(member);
         setToken(token);
-        setMode("memberMode");
+        setMode('memberMode');
       },
       signOut: () => {
         setToken(null);
         setUser(null);
         setMember(null);
-        setMode("authMode");
+        setMode('authMode');
       },
       setError: setError,
       error: error,
@@ -148,8 +149,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
