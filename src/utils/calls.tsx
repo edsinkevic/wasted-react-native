@@ -102,3 +102,8 @@ export const getCategories = (): Promise<string[]> =>
   axios
     .get<Array<string>>(`${config.baseUrl}/misc/cats`)
     .then((response) => response.data);
+
+export const getEntries = () =>
+  axios
+    .get<OfferEntry[]>(`${config.baseUrl}/offerentry`)
+    .then((response) => response.data);

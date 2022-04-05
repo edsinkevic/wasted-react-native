@@ -27,6 +27,9 @@ import { RegisterEntryScreen } from './src/screens/RegisterEntryScreen';
 import { SplashScreen } from './src/screens/SplashScreen';
 import MemberOverviewScreen from './src/screens/MemberOverviewScreen';
 import { ErrorResponse } from './src/models/ErrorResponse';
+import { BackpackItem } from './src/models/BackpackItem';
+import ShoppingCartScreen from './src/screens/ShoppingCartScreen';
+import { UserShopScreen } from './src/screens/UserShopScreen';
 
 const AuthStack = createNativeStackNavigator();
 const Tab = createMaterialTopTabNavigator();
@@ -57,7 +60,8 @@ const UserDrawerScreen = () => (
       swipeEnabled: true,
     }}
   >
-    <Drawer.Screen name="Shop" component={ShopScreen} />
+    <Drawer.Screen name="Shop" component={UserShopScreen} />
+    <Drawer.Screen name="Shopping cart" component={ShoppingCartScreen} />
   </Drawer.Navigator>
 );
 
@@ -82,6 +86,7 @@ export default function App() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [mode, setMode] = useState<string>('authMode');
   const [error, setError] = useState<ErrorResponse>(null);
+  const [backpack, setBackpack] = useState<BackpackItem[]>([]);
 
   const authContext = React.useMemo(() => {
     return {
@@ -99,14 +104,17 @@ export default function App() {
         setToken(null);
         setUser(null);
         setMember(null);
+        setBackpack([]);
         setMode('authMode');
       },
+      backpack: backpack,
+      setBackpack: setBackpack,
       setError: setError,
       error: error,
       user: user,
       member: member,
     };
-  }, [user, member, error]);
+  }, [user, member, error, backpack]);
 
   useEffect(() => {
     setTimeout(() => setIsLoading(false), 1000);

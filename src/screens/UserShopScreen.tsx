@@ -31,11 +31,12 @@ import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
 import { BackpackItem } from '../models/BackpackItem';
 import { clone } from 'cloneable-ts';
 
-export const ShopScreen = ({ navigation }) => {
+export const UserShopScreen = ({ navigation }) => {
   const [entries, setEntries] = useState<Array<OfferEntry>>([]);
   const [refresh, setRefresh] = useState<boolean>(true);
+  const [pick, setPick] = useState<BackpackItem>(null);
 
-  const { setError } = React.useContext(AuthContext);
+  const { setError, setBackpack, backpack } = React.useContext(AuthContext);
 
   const getEntries = () => {
     setRefresh(true);
@@ -50,7 +51,12 @@ export const ShopScreen = ({ navigation }) => {
   useEffect(getEntries, []);
 
   const renderEntry = ({ item }: { item: OfferEntry }) => (
-    <ShopListing item={item} onPress={() => {}} />
+    <ShopListing
+      item={item}
+      onPress={() => {
+        setPick({ id: Math.random().toString(), entry: item, amount: 1 });
+      }}
+    />
   );
 
   const [open, setOpen] = useState(false);
@@ -65,6 +71,32 @@ export const ShopScreen = ({ navigation }) => {
         keyExtractor={(item) => item.id}
         onRefresh={getEntries}
       />
+      {pick != null ? (
+        <View style={{ width: 200, height: 400, flex: 0.3 }}>
+          <Modal onRequestClose={() => setPick(null)}>
+            <TextInput
+              value={pick.amount.toString()}
+              keyboardType="number-pad"
+              onChangeText={(x) => setPick(clone(pick, { amount: Number(x) }))}
+            />
+            <Button
+              onPress={() => {
+                if (pick.amount >= 1 && pick.amount <= pick.entry.amount) {
+                  // console.log(pick);
+                  setBackpack([pick, ...backpack]);
+                  setPick(null);
+                  // console.log('picked');
+                  //console.log(backpack);
+                  // console.log([...backpack, clone(pick, { amount: amount })]);
+                  return;
+                } else return;
+              }}
+            >
+              Pick
+            </Button>
+          </Modal>
+        </View>
+      ) : null}
     </SafeAreaView>
   );
 
