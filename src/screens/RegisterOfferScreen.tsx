@@ -36,7 +36,7 @@ export const RegisterOfferScreen = ({ navigation }) => {
 
   const initialInput = {
     price: '',
-    category: 'Sweets',
+    category: 'sweets',
   };
 
   const reducer = (state, updates) => ({

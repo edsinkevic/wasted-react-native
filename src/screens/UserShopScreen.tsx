@@ -36,12 +36,23 @@ export const UserShopScreen = ({ navigation }) => {
   const [refresh, setRefresh] = useState<boolean>(true);
   const [pick, setPick] = useState<BackpackItem>(null);
 
-  const { setError, setBackpack, backpack } = React.useContext(AuthContext);
+  const {
+    setError,
+    setBackpack,
+    backpack,
+  }: { setError: any; setBackpack: any; backpack: BackpackItem[] } =
+    React.useContext(AuthContext);
 
   const getEntries = () => {
     setRefresh(true);
     getOfferEntries()
-      .then(setEntries)
+      .then((entries) =>
+        setEntries(
+          entries.filter(
+            (entry) => !backpack.find((item) => item.entry.id === entry.id),
+          ),
+        ),
+      )
       .catch((e: AxiosError<ErrorResponse>) => {
         setError(e.response.data);
       })
@@ -58,8 +69,6 @@ export const UserShopScreen = ({ navigation }) => {
       }}
     />
   );
-
-  const [open, setOpen] = useState(false);
 
   const header = <Text style={styles.text_header}>The shop</Text>;
   const footer = (
@@ -82,12 +91,9 @@ export const UserShopScreen = ({ navigation }) => {
             <Button
               onPress={() => {
                 if (pick.amount >= 1 && pick.amount <= pick.entry.amount) {
-                  // console.log(pick);
                   setBackpack([pick, ...backpack]);
                   setPick(null);
-                  // console.log('picked');
-                  //console.log(backpack);
-                  // console.log([...backpack, clone(pick, { amount: amount })]);
+                  getEntries();
                   return;
                 } else return;
               }}

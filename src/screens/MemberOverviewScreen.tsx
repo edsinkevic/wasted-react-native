@@ -1,5 +1,5 @@
 import { FooterHeader } from '../templates/FooterHeader';
-import { Text, StyleSheet, View, FlatList } from 'react-native';
+import { Text, StyleSheet, View, FlatList, RefreshControl } from 'react-native';
 import { colors } from '../utils/config';
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../utils/context';
@@ -57,6 +57,7 @@ export default ({ navigation }) => {
       <FlatList
         refreshing={refresh}
         onRefresh={() => refreshOffers(setRefresh)}
+        extraData={refresh}
         data={offers}
         keyExtractor={(item) => item.id}
         renderItem={renderOffer}
@@ -68,7 +69,11 @@ export default ({ navigation }) => {
           offer={picked}
           onSuccess={(offer) => {
             setOpen(!open);
-            setRefresh(true);
+            refreshOffers(setRefresh);
+          }}
+          onDelete={(offer) => {
+            setOpen(!open);
+            refreshOffers(setRefresh);
           }}
         />
       ) : null}

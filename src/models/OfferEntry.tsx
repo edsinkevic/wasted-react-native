@@ -1,4 +1,5 @@
-import { Offer } from "./Offer";
+import { Offer } from './Offer';
+import { ReservationItem } from './ReservationItem';
 
 export interface OfferEntry {
   id: string;
@@ -6,4 +7,5 @@ export interface OfferEntry {
   expiry: string;
   added: string;
   amount: number;
+  reservationItems: ReservationItem[];
 }

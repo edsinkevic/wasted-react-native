@@ -14,6 +14,8 @@ import { OfferEntryCreate } from '../models/OfferEntryCreate';
 import { OfferUpdate } from '../models/OfferUpdate';
 import { OfferCreate } from '../models/OfferCreate';
 import { OfferEntry } from '../models/OfferEntry';
+import { ReservationCreate } from '../models/ReservationCreate';
+import { Reservation } from '../models/Reservation';
 
 export const login = (creds: Credentials, uri: string) => {
   return fetch(uri, {
@@ -88,9 +90,31 @@ export const updateOffer = (update: OfferUpdate) =>
     .put<Offer>(`${config.baseUrl}/offer`, update)
     .then((response) => response.data);
 
+export const deleteOffer = (id: string) =>
+  axios
+    .delete<Offer>(`${config.baseUrl}/offer/${id}`)
+    .then((response) => response.data);
+
 export const registerEntry = (create: OfferEntryCreate): Promise<OfferEntry> =>
   axios
     .post<OfferEntry>(`${config.baseUrl}/offerentry`, create)
+    .then((response) => response.data);
+
+export const registerReservation = (
+  create: ReservationCreate,
+): Promise<Reservation> =>
+  axios
+    .post<Reservation>(`${config.baseUrl}/reservation`, create)
+    .then((response) => response.data);
+
+export const getReservation = (customerId: string): Promise<Reservation> =>
+  axios
+    .get<Reservation>(`${config.baseUrl}/reservation/${customerId}`)
+    .then((response) => response.data);
+
+export const confirmReservation = (code: string): Promise<Reservation> =>
+  axios
+    .post<Reservation>(`${config.baseUrl}/reservation/${code}`)
     .then((response) => response.data);
 
 export const getOffersByVendorName = (name: String): Promise<Offer[]> =>
