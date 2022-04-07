@@ -34,6 +34,18 @@ export default ({ navigation }) => {
   const [pick, setPick] = useState<BackpackItem>(null);
   const [refresh, setRefresh] = useState<boolean>(false);
 
+  if (backpack.length == 0)
+    return (
+      <FooterHeader
+        headerComponent={
+          <Text style={styles.title}>Your shopping cart is empty</Text>
+        }
+        footerComponent={<></>}
+        headerFlex={3}
+        footerFlex={1}
+      />
+    );
+
   const listingOnPress = (func, item) => {
     const newAmount = func(item.amount);
     if (newAmount >= 1 && newAmount <= item.entry.amount)
@@ -47,7 +59,9 @@ export default ({ navigation }) => {
   };
 
   const reserve = () => {
-    const create: ReservationCreate = {
+    setRefresh(true);
+
+    registerReservation({
       customerId: user.id,
       items: backpack.map((item) => {
         return {
@@ -56,12 +70,10 @@ export default ({ navigation }) => {
           entryAmount: item.entry.amount,
         };
       }),
-    };
-    console.log(JSON.stringify(create));
-
-    setRefresh(true);
-    registerReservation(create)
+    })
       .then((res) => setUser(clone(user, { reservations: [res] })))
+      .then(() => navigation.jumpTo('Reservation'))
+      .then(() => setBackpack([]))
       .catch((e: AxiosError<ErrorResponse>) => setError(e.response.data))
       .finally(() => setRefresh(false));
     return;
@@ -103,12 +115,8 @@ export default ({ navigation }) => {
 
   const footer = (
     <View>
-      {backpack.length > 0 ? (
-        <>
-          <Button onPress={reserve}>Reserve</Button>
-          <Text>Total price: {calculateBackpack()}</Text>
-        </>
-      ) : null}
+      <Button onPress={reserve}>Reserve</Button>
+      <Text>Total price: {calculateBackpack()}</Text>
       <FlatList
         data={backpack}
         refreshing={refresh}
@@ -116,28 +124,6 @@ export default ({ navigation }) => {
         renderItem={renderEntry}
         ListEmptyComponent={<Text>There aren't any items...</Text>}
       />
-      {pick !== null ? (
-        <View style={{ width: 200, height: 400, flex: 0.3 }}>
-          <Modal onRequestClose={() => setPick(null)}>
-            <TextInput
-              value={pick.amount.toString()}
-              keyboardType="number-pad"
-              onChangeText={(x) => setPick(clone(pick, { amount: Number(x) }))}
-            />
-            <Button
-              onPress={() => {
-                if (pick.amount >= 1 && pick.amount <= pick.entry.amount) {
-                  setBackpack([pick, ...backpack]);
-                  setPick(null);
-                  return;
-                } else return;
-              }}
-            >
-              Pick
-            </Button>
-          </Modal>
-        </View>
-      ) : null}
     </View>
   );
   return (

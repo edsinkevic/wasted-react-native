@@ -117,6 +117,11 @@ export const confirmReservation = (code: string): Promise<Reservation> =>
     .post<Reservation>(`${config.baseUrl}/reservation/${code}`)
     .then((response) => response.data);
 
+export const cancelReservation = (id: string): Promise<Reservation> =>
+  axios
+    .delete<Reservation>(`${config.baseUrl}/reservation/${id}`)
+    .then((response) => response.data);
+
 export const getOffersByVendorName = (name: String): Promise<Offer[]> =>
   axios
     .get<Array<Offer>>(`${config.baseUrl}/offer/${name}`)

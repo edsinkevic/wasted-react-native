@@ -10,24 +10,29 @@ import { OfferEntry } from '../models/OfferEntry';
 import { ShopListing } from '../components/ShopListing';
 import BackpackListing from '../components/BackpackListing';
 import { ReservationCreate } from '../models/ReservationCreate';
-import { registerReservation } from '../utils/calls';
+import { cancelReservation, registerReservation } from '../utils/calls';
 import { Reservation } from '../models/Reservation';
 import { UserLoginScreen } from './UserLoginScreen';
 import { User } from '../models/User';
-import { AxiosError } from 'axios';
+import { Axios, AxiosError } from 'axios';
 import { ErrorResponse } from '../models/ErrorResponse';
 import { ReservationItem } from '../models/ReservationItem';
 import moment from 'moment';
+import { WastedButton } from '../components/WastedButton';
+import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
 
-export default () => {
-  const { user }: { user: User } = useContext(AuthContext);
-
-  const reservation = user.reservations[0];
+export default ({ navigation }) => {
+  const {
+    user,
+    setUser,
+    setError,
+  }: {
+    user: User;
+    setUser: (x: User) => void;
+    setError: (x: ErrorResponse) => void;
+  } = useContext(AuthContext);
 
   const [currentTime, setCurrentTime] = useState(moment());
-  const timeBetween = moment.duration(
-    moment(reservation.expirationDate).diff(currentTime),
-  );
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -37,6 +42,24 @@ export default () => {
     return () => clearInterval(interval);
   }, []);
 
+  if (user.reservations.length == 0)
+    return (
+      <FooterHeader
+        headerComponent={
+          <Text style={styles.title}>You haven't reserved anything</Text>
+        }
+        footerComponent={<></>}
+        headerFlex={3}
+        footerFlex={1}
+      />
+    );
+
+  const reservation = user.reservations[0];
+
+  const timeBetween = moment.duration(
+    moment(reservation.expirationDate).diff(currentTime),
+  );
+
   const renderEntry = ({ item }: { item: ReservationItem }) => (
     <>
       <BackpackListing
@@ -44,10 +67,20 @@ export default () => {
       />
     </>
   );
-
   const header = <Text style={styles.title}>{reservation.code}</Text>;
   const footer = (
     <View>
+      <WastedButton
+        onPress={() => {
+          cancelReservation(reservation.id)
+            .then((res) => setUser(clone(user, { reservations: [] })))
+            .catch((e: AxiosError<ErrorResponse>) => {
+              console.log(e);
+              setError(e.response.data);
+            });
+        }}
+        text="Cancel"
+      />
       <Text>
         Timeleft: {timeBetween.hours()}:{timeBetween.minutes()}:
         {timeBetween.seconds()}
@@ -56,15 +89,13 @@ export default () => {
     </View>
   );
 
-  return user.reservations.length > 0 ? (
+  return (
     <FooterHeader
       headerComponent={header}
       footerComponent={footer}
       headerFlex={1}
       footerFlex={4}
     />
-  ) : (
-    <Text style={styles.title}>No reservation</Text>
   );
 };
 

@@ -72,7 +72,7 @@ const AuthStackScreen = () => (
   </AuthStack.Navigator>
 );
 
-const UserDrawerScreen = ({ user }: { user: User }) => (
+const UserDrawerScreen = () => (
   <Drawer.Navigator
     drawerContent={(props) => <CustomerDrawer {...props} />}
     screenOptions={{
@@ -83,9 +83,7 @@ const UserDrawerScreen = ({ user }: { user: User }) => (
   >
     <Drawer.Screen name="Shop" component={UserShopScreen} />
     <Drawer.Screen name="Shopping cart" component={ShoppingCartScreen} />
-    {user.reservations.length > 0 ? (
-      <Drawer.Screen name="Reservation" component={ReservationScreen} />
-    ) : null}
+    <Drawer.Screen name="Reservation" component={ReservationScreen} />
   </Drawer.Navigator>
 );
 
@@ -123,6 +121,7 @@ export default function App() {
       setError: setError,
       error: error,
       user: user,
+      setUser: setUser,
       member: member,
       reservation: reservation,
       setReservation: setReservation,
@@ -155,7 +154,7 @@ export default function App() {
   }
 
   const components = {
-    userMode: <UserDrawerScreen user={user} />,
+    userMode: <UserDrawerScreen />,
     memberMode: <MemberTabScreen />,
     authMode: <AuthStackScreen />,
   };
