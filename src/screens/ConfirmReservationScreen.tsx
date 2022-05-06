@@ -1,6 +1,6 @@
 import { Button, Colors, TextInput } from 'react-native-paper';
 import { useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, Alert } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { User } from '../models/User';
 import { colors, config } from '../utils/config';
@@ -25,13 +25,15 @@ export const ConfirmReservationScreen = ({
     <View>
       <TextInput
         style={styles.input}
-        label={<Text style={styles.input_label}>Username</Text>}
+        label={<Text style={styles.input_label}>Code</Text>}
         onChangeText={(input) => setState(input)}
       />
       <WastedButton
         onPress={async () => {
           await confirmReservation(state)
-            .then((reservation) => {})
+            .then((reservation) => {
+              Alert.alert('Items were given away successfully');
+            })
             .catch((e: AxiosError<ErrorResponse>) => setError(e.response.data));
         }}
         text="Confirm"
