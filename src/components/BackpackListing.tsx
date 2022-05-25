@@ -7,21 +7,16 @@ import {
   View,
   Image,
 } from 'react-native';
+import { BackpackItem } from '../models/BackpackItem';
 import { OfferEntry } from '../models/OfferEntry';
 import { colors } from '../utils/config';
 import { datePrettyPrint } from '../utils/functions';
 
-export const ShopListing = ({
-  item,
-  onPress,
-}: {
-  item: OfferEntry;
-  onPress: () => void;
-}) => {
-  const expiration = new Date(item.expiry);
+export default ({ item }: { item: BackpackItem }) => {
+  const expiration = new Date(item.entry.expiry);
 
   return (
-    <Pressable onPress={onPress} style={styles.container}>
+    <Pressable onPress={() => console.log('pressed')} style={styles.container}>
       <View style={styles.imageContainer}>
         <Image
           source={require('../../assets/praygecover.jpg')}
@@ -29,12 +24,13 @@ export const ShopListing = ({
         />
       </View>
       <View>
-        <Text style={styles.text_big}>{item.offer.name}</Text>
-        <Text style={styles.text_big}>{item.offer.price}$</Text>
-        <Text style={styles.text_big}>{item.amount} units</Text>
+        <Text style={styles.text_big}>{item.entry.offer.name}</Text>
+        <Text style={styles.text_big}>{item.entry.offer.price}$</Text>
+        <Text style={styles.text_big}>{item.entry.amount} units</Text>
         <Text style={styles.text_big}>
           Expires on: {datePrettyPrint(expiration)}
         </Text>
+        <Text style={styles.text_big}>Taken amount: {item.amount} units</Text>
       </View>
     </Pressable>
   );

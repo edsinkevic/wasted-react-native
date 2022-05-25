@@ -7,7 +7,7 @@ import { AuthContext } from '../utils/context';
 import CurrencyInput, { FakeCurrencyInput } from 'react-native-currency-input';
 import { FooterHeader } from '../templates/FooterHeader';
 import ExpiryDatePicker from './ExpiryDatePicker';
-import { registerOffer, updateOffer } from '../utils/calls';
+import { deleteOffer, registerOffer, updateOffer } from '../utils/calls';
 import { Offer } from '../models/Offer';
 import { OfferUpdate } from '../models/OfferUpdate';
 import { Axios, AxiosError } from 'axios';
@@ -15,11 +15,13 @@ import { ErrorResponse } from '../models/ErrorResponse';
 
 export const OfferInputModal = ({
   offer,
-  onSuccess,
+  onUpdate,
+  onDelete,
 }: {
   offer: Offer;
-  onSuccess: (offer: Offer) => void;
-}) => {
+  onUpdate: (offer: Offer) => void;
+  onDelete: (offer: Offer) => void;
+}): JSX.Element => {
   const { member, setError } = useContext(AuthContext);
 
   const [info, setInfo] = useState<OfferUpdate>({
@@ -84,11 +86,20 @@ export const OfferInputModal = ({
       <Button
         onPress={() =>
           updateOffer(info)
-            .then((result: Offer) => onSuccess(result))
+            .then((result: Offer) => onUpdate(result))
             .catch((e: AxiosError<ErrorResponse>) => setError(e.response.data))
         }
       >
         Update
+      </Button>
+      <Button
+        onPress={() =>
+          deleteOffer(offer.id)
+            .then((result: Offer) => onDelete(result))
+            .catch((e: AxiosError<ErrorResponse>) => setError(e.response.data))
+        }
+      >
+        Delete
       </Button>
     </View>
   );

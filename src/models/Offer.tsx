@@ -1,4 +1,4 @@
-import { Vendor } from "./Vendor";
+import { Vendor } from './Vendor';
 
 export interface Offer {
   id: string;
@@ -7,4 +7,5 @@ export interface Offer {
   weight: number;
   category: string;
   price: number;
+  vendor: Vendor;
 }

@@ -1,3 +1,5 @@
+import { Reservation } from './Reservation';
+
 export interface User {
   username: string;
   firstname: string;
@@ -5,4 +7,5 @@ export interface User {
   role: string;
   email: string;
   id: string;
+  reservations: Reservation[];
 }

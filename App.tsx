@@ -9,7 +9,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { ShopScreen } from './src/screens/ShopScreen';
 import { Member } from './src/models/Member';
 import { MemberLoginScreen } from './src/screens/MemberLoginScreen';
-import { getUser, login } from './src/utils/calls';
+import { getReservation, getUser, login } from './src/utils/calls';
 import { config } from './src/utils/config';
 import { Button } from 'react-native-paper';
 import { AuthContext } from './src/utils/context';
@@ -27,6 +27,12 @@ import { RegisterEntryScreen } from './src/screens/RegisterEntryScreen';
 import { SplashScreen } from './src/screens/SplashScreen';
 import MemberOverviewScreen from './src/screens/MemberOverviewScreen';
 import { ErrorResponse } from './src/models/ErrorResponse';
+import { BackpackItem } from './src/models/BackpackItem';
+import ShoppingCartScreen from './src/screens/ShoppingCartScreen';
+import { UserShopScreen } from './src/screens/UserShopScreen';
+import { Reservation } from './src/models/Reservation';
+import ReservationScreen from './src/screens/ReservationScreen';
+import { ConfirmReservationScreen } from './src/screens/ConfirmReservationScreen';
 
 const AuthStack = createNativeStackNavigator();
 const Tab = createMaterialTopTabNavigator();
@@ -45,19 +51,10 @@ const MemberTabScreen = () => (
     <Drawer.Screen name="Register items" component={RegisterOfferScreen} />
     <Drawer.Screen name="Register entries" component={RegisterEntryScreen} />
     <Drawer.Screen name="Overview" component={MemberOverviewScreen} />
-  </Drawer.Navigator>
-);
-
-const UserDrawerScreen = () => (
-  <Drawer.Navigator
-    drawerContent={(props) => <CustomerDrawer {...props} />}
-    screenOptions={{
-      swipeEdgeWidth: 300,
-      headerShown: false,
-      swipeEnabled: true,
-    }}
-  >
-    <Drawer.Screen name="Shop" component={ShopScreen} />
+    <Drawer.Screen
+      name="Confirm reservation"
+      component={ConfirmReservationScreen}
+    />
   </Drawer.Navigator>
 );
 
@@ -75,6 +72,21 @@ const AuthStackScreen = () => (
   </AuthStack.Navigator>
 );
 
+const UserDrawerScreen = () => (
+  <Drawer.Navigator
+    drawerContent={(props) => <CustomerDrawer {...props} />}
+    screenOptions={{
+      swipeEdgeWidth: 300,
+      headerShown: false,
+      swipeEnabled: true,
+    }}
+  >
+    <Drawer.Screen name="Shop" component={UserShopScreen} />
+    <Drawer.Screen name="Shopping cart" component={ShoppingCartScreen} />
+    <Drawer.Screen name="Reservation" component={ReservationScreen} />
+  </Drawer.Navigator>
+);
+
 export default function App() {
   const [user, setUser] = useState<User>(null);
   const [token, setToken] = useState<string>(null);
@@ -82,6 +94,8 @@ export default function App() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [mode, setMode] = useState<string>('authMode');
   const [error, setError] = useState<ErrorResponse>(null);
+  const [backpack, setBackpack] = useState<BackpackItem[]>([]);
+  const [reservation, setReservation] = useState<Reservation>(null);
 
   const authContext = React.useMemo(() => {
     return {
@@ -99,14 +113,20 @@ export default function App() {
         setToken(null);
         setUser(null);
         setMember(null);
+        setBackpack([]);
         setMode('authMode');
       },
+      backpack: backpack,
+      setBackpack: setBackpack,
       setError: setError,
       error: error,
       user: user,
+      setUser: setUser,
       member: member,
+      reservation: reservation,
+      setReservation: setReservation,
     };
-  }, [user, member, error]);
+  }, [user, member, error, backpack, reservation]);
 
   useEffect(() => {
     setTimeout(() => setIsLoading(false), 1000);

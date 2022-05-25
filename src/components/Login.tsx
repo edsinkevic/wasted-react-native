@@ -1,19 +1,19 @@
-import { Button, Colors, TextInput } from "react-native-paper";
-import { useState } from "react";
-import { View, StyleSheet, Text } from "react-native";
-import * as SecureStore from "expo-secure-store";
-import { User } from "../models/User";
-import { colors, config } from "../utils/config";
-import { Credentials } from "../models/Credentials";
-import { getUser, login } from "../utils/calls";
-import { AuthContext } from "../utils/context";
-import React from "react";
-import { WastedButton } from "./WastedButton";
+import { Button, Colors, TextInput } from 'react-native-paper';
+import { useState } from 'react';
+import { View, StyleSheet, Text } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
+import { User } from '../models/User';
+import { colors, config } from '../utils/config';
+import { Credentials } from '../models/Credentials';
+import { getUser, login } from '../utils/calls';
+import { AuthContext } from '../utils/context';
+import React from 'react';
+import { WastedButton } from './WastedButton';
 
 export const Login = ({ getUserUri, loginUri, signIn, signOut, setError }) => {
   const [state, setState] = useState<Credentials>({
-    username: "",
-    password: "",
+    username: '',
+    password: '',
   });
   return (
     <>
@@ -26,6 +26,7 @@ export const Login = ({ getUserUri, loginUri, signIn, signOut, setError }) => {
       />
       <TextInput
         style={styles.input}
+        secureTextEntry={true}
         label={<Text style={styles.input_label}>Password</Text>}
         onChangeText={(input) =>
           setState({ username: state.username, password: input })
@@ -36,7 +37,7 @@ export const Login = ({ getUserUri, loginUri, signIn, signOut, setError }) => {
           signOut();
           await login(state, loginUri)
             .then((token) =>
-              getUser(getUserUri, token).then((user) => [user, token])
+              getUser(getUserUri, token).then((user) => [user, token]),
             )
             .then(([user, token]) => signIn(user, token))
             .catch((e) => setError(e));
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: Colors.white,
     width: 200,
-    alignSelf: "center",
+    alignSelf: 'center',
   },
   input_label: {
     color: colors.darkerMain,

@@ -1,19 +1,21 @@
-import React, { useState } from "react";
-import { Alert, Modal, StyleSheet, Text, Pressable, View } from "react-native";
-import { OfferInputModal } from "../components/OfferUpdateModal";
-import { Offer } from "../models/Offer";
-import { RegisterOfferScreen } from "./RegisterOfferScreen";
+import React, { useState } from 'react';
+import { Alert, Modal, StyleSheet, Text, Pressable, View } from 'react-native';
+import { OfferInputModal } from '../components/OfferUpdateModal';
+import { Offer } from '../models/Offer';
+import { RegisterOfferScreen } from './RegisterOfferScreen';
 
 export default ({
   visible,
   setVisible,
   offer,
   onSuccess,
+  onDelete,
 }: {
   visible: boolean;
   setVisible: (x: boolean) => void;
   offer: Offer;
   onSuccess: (x: Offer) => void;
+  onDelete: (x: Offer) => void;
 }) => {
   return (
     <View style={styles.centeredView}>
@@ -26,7 +28,11 @@ export default ({
         }}
       >
         <View style={styles.centeredView}>
-          <OfferInputModal offer={offer} onSuccess={onSuccess} />
+          <OfferInputModal
+            offer={offer}
+            onUpdate={onSuccess}
+            onDelete={onDelete}
+          />
         </View>
       </Modal>
     </View>
@@ -35,18 +41,18 @@ export default ({
 
 const styles = StyleSheet.create({
   centeredView: {
-    justifyContent: "center",
-    alignItems: "center",
-    alignSelf: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
     marginTop: 100,
   },
   modalView: {
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 20,
     padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -61,18 +67,18 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   buttonOpen: {
-    backgroundColor: "#F194FF",
+    backgroundColor: '#F194FF',
   },
   buttonClose: {
-    backgroundColor: "#2196F3",
+    backgroundColor: '#2196F3',
   },
   textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   modalText: {
     marginBottom: 15,
-    textAlign: "center",
+    textAlign: 'center',
   },
 });
