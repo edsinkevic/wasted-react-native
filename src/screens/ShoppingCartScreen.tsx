@@ -31,7 +31,6 @@ export default ({ navigation }) => {
     setUser: (x: User) => void;
     setError: (x: ErrorResponse) => void;
   } = useContext(AuthContext);
-  const [pick, setPick] = useState<BackpackItem>(null);
   const [refresh, setRefresh] = useState<boolean>(false);
 
   if (backpack.length == 0)
