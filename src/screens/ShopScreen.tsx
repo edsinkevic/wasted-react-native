@@ -53,8 +53,6 @@ export const ShopScreen = ({ navigation }) => {
     <ShopListing item={item} onPress={() => {}} />
   );
 
-  const [open, setOpen] = useState(false);
-
   const header = <Text style={styles.text_header}>The shop</Text>;
   const footer = (
     <SafeAreaView style={styles.container}>
