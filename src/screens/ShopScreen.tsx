@@ -33,21 +33,20 @@ import { clone } from 'cloneable-ts';
 
 export const ShopScreen = ({ navigation }) => {
   const [entries, setEntries] = useState<Array<OfferEntry>>([]);
-  const [refresh, setRefresh] = useState<boolean>(true);
 
   const { setError } = React.useContext(AuthContext);
 
   const getEntries = () => {
-    setRefresh(true);
     getOfferEntries()
       .then(setEntries)
       .catch((e: AxiosError<ErrorResponse>) => {
         setError(e.response.data);
-      })
-      .finally(() => setRefresh(false));
+      });
   };
 
   useEffect(getEntries, []);
+
+  useEffect(() => navigation.addListener('focus', getEntries), [navigation]);
 
   const renderEntry = ({ item }: { item: OfferEntry }) => (
     <ShopListing item={item} onPress={() => {}} />
@@ -59,7 +58,6 @@ export const ShopScreen = ({ navigation }) => {
       <FlatList
         data={entries}
         renderItem={renderEntry}
-        refreshing={refresh}
         keyExtractor={(item) => item.id}
         onRefresh={getEntries}
       />

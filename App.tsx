@@ -33,6 +33,7 @@ import { UserShopScreen } from './src/screens/UserShopScreen';
 import { Reservation } from './src/models/Reservation';
 import ReservationScreen from './src/screens/ReservationScreen';
 import { ConfirmReservationScreen } from './src/screens/ConfirmReservationScreen';
+import { MemberSignupWithVendorScreen } from './src/screens/MemberSignupWithVendorScreen';
 
 const AuthStack = createNativeStackNavigator();
 const Tab = createMaterialTopTabNavigator();
@@ -66,6 +67,10 @@ const AuthStackScreen = () => (
     <AuthStack.Screen name="User login" component={UserLoginScreen} />
     <AuthStack.Screen name="User signup" component={UserSignupScreen} />
     <AuthStack.Screen name="Member signup" component={MemberSignupScreen} />
+    <AuthStack.Screen
+      name="Member signup with vendor creation"
+      component={MemberSignupWithVendorScreen}
+    />
     <AuthStack.Screen name="Member login" component={MemberLoginScreen} />
     <AuthStack.Screen name="User pages" component={UserDrawerScreen} />
     <AuthStack.Screen name="Member pages" component={MemberTabScreen} />

@@ -1,15 +1,15 @@
-import * as React from "react";
-import { View, Text, SafeAreaView, StyleSheet } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
-import { Login } from "../components/Login";
-import { User } from "../models/User";
-import { Credentials } from "../models/Credentials";
-import { colors, config } from "../utils/config";
-import * as SecureStore from "expo-secure-store";
-import { AuthContext } from "../utils/context";
-import { Button } from "react-native-paper";
-import { FooterHeader } from "../templates/FooterHeader";
-import { WastedButton } from "../components/WastedButton";
+import * as React from 'react';
+import { View, Text, SafeAreaView, StyleSheet } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { Login } from '../components/Login';
+import { User } from '../models/User';
+import { Credentials } from '../models/Credentials';
+import { colors, config } from '../utils/config';
+import * as SecureStore from 'expo-secure-store';
+import { AuthContext } from '../utils/context';
+import { Button } from 'react-native-paper';
+import { FooterHeader } from '../templates/FooterHeader';
+import { WastedButton } from '../components/WastedButton';
 
 export const MemberLoginScreen = ({ navigation }) => {
   const { signInAsMember, signOut, setError } = React.useContext(AuthContext);
@@ -25,8 +25,12 @@ export const MemberLoginScreen = ({ navigation }) => {
         setError={setError}
       />
       <WastedButton
-        onPress={() => navigation.push("Member signup")}
+        onPress={() => navigation.push('Member signup')}
         text="Sign up"
+      />
+      <WastedButton
+        onPress={() => navigation.push('Member signup with vendor creation')}
+        text="Create a new vendor"
       />
     </>
   );
@@ -48,30 +52,30 @@ const styles = StyleSheet.create({
   },
   header: {
     flex: 1,
-    justifyContent: "flex-end",
+    justifyContent: 'flex-end',
     paddingHorizontal: 20,
     paddingBottom: 50,
   },
   text_header: {
     color: colors.secondary,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 30,
   },
   footer: {
     flex: 2,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingVertical: 50,
     paddingHorizontal: 30,
   },
   title: {
-    color: "#05375a",
+    color: '#05375a',
     fontSize: 30,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   text: {
-    color: "grey",
+    color: 'grey',
     marginTop: 5,
   },
   button: {
@@ -80,13 +84,13 @@ const styles = StyleSheet.create({
   signIn: {
     width: 150,
     height: 40,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 50,
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   textSign: {
-    color: "white",
-    fontWeight: "bold",
+    color: 'white',
+    fontWeight: 'bold',
   },
 });

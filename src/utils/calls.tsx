@@ -16,6 +16,7 @@ import { OfferCreate } from '../models/OfferCreate';
 import { OfferEntry } from '../models/OfferEntry';
 import { ReservationCreate } from '../models/ReservationCreate';
 import { Reservation } from '../models/Reservation';
+import { Member } from '../models/Member';
 
 export const login = (creds: Credentials, uri: string) => {
   return fetch(uri, {
@@ -135,4 +136,9 @@ export const getCategories = (): Promise<string[]> =>
 export const getEntries = () =>
   axios
     .get<OfferEntry[]>(`${config.baseUrl}/offerentry`)
+    .then((response) => response.data);
+
+export const signupWithVendorCreate = (creds: SignupWithVendor) =>
+  axios
+    .post<Member>(`${config.baseUrl}/member/register/vendor`, creds)
     .then((response) => response.data);
